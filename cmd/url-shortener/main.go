@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"os"
 	"rest_api_shortener/internal/config"
+	"rest_api_shortener/internal/storage/sqlite"
 )
 
 const (
@@ -24,7 +25,13 @@ func main() {
 	log.Info("START URL-SHORTENER", slog.String("env", cfg.Env))
 	log.Debug("DEBUG messages are enabled")
 
-	// TODO: init storage: sqlite
+	storage, err := sqlite.NewStorage(cfg.Storage)
+	if err != nil {
+		log.Error("Failed to initialize storage", err)
+		os.Exit(1)
+	}
+	_ = storage
+
 	// TODO: init router: chi, "chi render"
 	// TODO: run server
 }
